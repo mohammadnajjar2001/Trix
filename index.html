@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>تسجيل نتائج تركس</title>
+  <style>
+    /* خطوط وأساسيات */
+    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: linear-gradient(135deg, #232526, #414345);
+      color: #fff;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: auto;
+      background: #1e1e2f;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+      transition: 0.3s ease;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-weight: 700;
+      color: #00ffcc;
+    }
+
+    label {
+      margin-top: 15px;
+      font-weight: 600;
+      display: block;
+      color: #ccc;
+    }
+
+    select, input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 5px;
+      border: none;
+      border-radius: 8px;
+      background-color: #2c2f4a;
+      color: #fff;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    select:focus, input:focus {
+      border: 2px solid #00ffcc;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 20px;
+      padding: 12px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s ease;
+    }
+
+    #startBtn {
+      background-color: #007bff;
+      color: white;
+    }
+
+    #startBtn:hover {
+      background-color: #0069d9;
+    }
+
+    .reset {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    .reset:hover {
+      background-color: #b52a37;
+    }
+
+    .add-btn {
+      background-color: #28a745;
+      color: white;
+    }
+
+    .add-btn:hover {
+      background-color: #218838;
+    }
+
+    .result {
+      margin-top: 30px;
+      text-align: center;
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #00ffcc;
+    }
+
+    .history {
+      margin-top: 25px;
+      background: #2a2e4d;
+      padding: 15px;
+      border-radius: 10px;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+
+    .history div {
+      border-bottom: 1px solid #444;
+      padding: 6px 0;
+      color: #eee;
+      font-size: 1rem;
+    }
+
+    #initial-section {
+      background: #2c2f4a;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 25px;
+    }
+
+    /* مظهر السكروول داخل السجل */
+    .history::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .history::-webkit-scrollbar-thumb {
+      background-color: #00ffcc;
+      border-radius: 3px;
+    }
+
+    /* استجابة الجوال */
+    @media (max-width: 600px) {
+      .container {
+        padding: 20px;
+      }
+
+      .result {
+        font-size: 1.4rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>تسجيل نتائج تركس</h1>
+
+  <div id="initial-section">
+    <label for="initialScore">النتيجة الابتدائية (اختياري):</label>
+    <input type="number" id="initialScore" placeholder="مثال: 150 أو 0" />
+    <button id="startBtn" onclick="startGame()">بدء اللعبة</button>
+  </div>
+
+  <div id="game-section" style="display:none;">
+    <label for="gameType">اختر التسمية:</label>
+    <select id="gameType" onchange="handleGameTypeChange()">
+      <option value="queen">بنات</option>
+      <option value="king">دينار</option>
+      <option value="slap">لطش</option>
+      <option value="picker">ختيار</option>
+      <option value="trex">تركس</option>
+    </select>
+
+    <label for="valueInput">كم عدد البنود / النقاط؟</label>
+    <input type="number" id="valueInput" placeholder="مثال: 3 أو 200" />
+
+    <button class="add-btn" onclick="addResult()">➕ إضافة النتيجة</button>
+    <button class="reset" onclick="resetGame()">🔄 إعادة تعيين</button>
+
+    <div class="result">
+      المجموع الكلي: <span id="totalScore">0</span> نقطة
+    </div>
+
+    <div class="history" id="historyLog">
+      <!-- سجل الجولات -->
+    </div>
+  </div>
+</div>
+
+<script>
+  let totalScore = 0;
+  const totalScoreDisplay = document.getElementById("totalScore");
+  const historyLog = document.getElementById("historyLog");
+  const valueInput = document.getElementById("valueInput");
+  const gameTypeSelect = document.getElementById("gameType");
+
+  function startGame() {
+    const initial = parseInt(document.getElementById("initialScore").value);
+    totalScore = isNaN(initial) ? 0 : initial;
+    totalScoreDisplay.textContent = totalScore;
+    document.getElementById("initial-section").style.display = "none";
+    document.getElementById("game-section").style.display = "block";
+  }
+
+  function handleGameTypeChange() {
+    const selected = gameTypeSelect.value;
+    if (selected === 'picker') {
+      valueInput.value = 1;
+      valueInput.disabled = true;
+    } else {
+      valueInput.value = '';
+      valueInput.disabled = false;
+    }
+  }
+
+  function addResult() {
+    const gameType = gameTypeSelect.value;
+    let value = parseInt(valueInput.value);
+
+    if (isNaN(value)) {
+      alert("يرجى إدخال رقم صحيح");
+      return;
+    }
+
+    let points = 0;
+    let description = '';
+
+    switch (gameType) {
+      case 'queen':
+        points = -25 * value;
+        description = `بنات × ${value} = ${points}`;
+        break;
+      case 'king':
+        points = -10 * value;
+        description = `دينار × ${value} = ${points}`;
+        break;
+      case 'slap':
+        points = -15 * value;
+        description = `لطش × ${value} = ${points}`;
+        break;
+      case 'picker':
+        value = 1;
+        points = -75;
+        description = `ختيار = ${points}`;
+        break;
+      case 'trex':
+        points = value;
+        description = `تركس = ${points}`;
+        break;
+    }
+
+    totalScore += points;
+    totalScoreDisplay.textContent = totalScore;
+
+    const logEntry = document.createElement("div");
+    logEntry.textContent = description;
+    historyLog.prepend(logEntry);
+
+    if (gameType !== 'picker') {
+      valueInput.value = '';
+    }
+  }
+
+  function resetGame() {
+    if (confirm("هل تريد إعادة تعيين النتيجة؟")) {
+      totalScore = 0;
+      totalScoreDisplay.textContent = "0";
+      historyLog.innerHTML = '';
+      document.getElementById("initialScore").value = '';
+      document.getElementById("initial-section").style.display = "block";
+      document.getElementById("game-section").style.display = "none";
+    }
+  }
+
+  window.onload = handleGameTypeChange;
+</script>
+
+</body>
+</html>
