@@ -113,7 +113,7 @@
       border-radius:14px;
       padding:16px;
       box-shadow: 0 8px 30px rgba(0,0,0,0.6);
-      min-height:420px;
+      min-height:40px;
       display:flex;
       flex-direction:column;
       gap:12px;
@@ -177,9 +177,9 @@
         <div class="opt-btn" data-opt="trex">تركس</div>
       </div>
 
-      <div style="margin-top:12px; color:var(--muted); font-size:13px">
+      <!-- <div style="margin-top:12px; color:var(--muted); font-size:13px">
         ملاحظة: كل لاعب لا يستطيع إعادة اختيار نفس الخيار مرتين. بعد أن يكمل اللاعب الخمس خيارات ينتقل الدور للاعب التالي.
-      </div>
+      </div> -->
     </div>
 
     <!-- اللوحة اليمنى: تحكم / اختيار القيمة / سجل -->
@@ -199,7 +199,7 @@
         </div>
       </div>
 
-      <div class="panel">
+      <!-- <div class="panel">
         <label>تحكم سريع:</label>
         <div class="action-row">
           <button class="btn ghost" id="skipBtn">تخطي (لا أنصح)</button>
@@ -210,9 +210,20 @@
       <div class="panel">
         <label>السجل:</label>
         <div id="historyLog"></div>
+      </div> -->
+    </div>
+    
+    <div class="panel">
+      <label>السجل:</label>
+      <div id="historyLog"></div>
+    </div>
+    <div class="panel">
+      <label>تحكم سريع:</label>
+      <div class="action-row">
+        <button class="btn ghost" id="skipBtn">تخطي (لا أنصح)</button>
+        <button class="btn warn" id="resetBtn">إعادة تعيين اللعبة</button>
       </div>
     </div>
-
   </div>
 
 <script>
@@ -241,7 +252,7 @@
     slap: Array.from({length:14},(_,i)=>i), // 0..13
     king: Array.from({length:14},(_,i)=>i), // 0..13
     picker: [0,1],                         // 0 or 1
-    trex: [150,200,250,300,350]            // كما طلبت (300 مرتين موجودة)
+    trex: [150,200,250,300,350]         
   };
 
   // عناصر واجهة
@@ -348,7 +359,7 @@
     players[currentPlayer].doneCount++;
 
     // إضافة سجل
-    addLog(`اللاعب ${currentPlayer} اختار ${labelOf(optKey)} (قيمة: ${value}) → ${points} نقطة`);
+    addLog(`اللاعب ${currentPlayer} اختار ${labelOf(optKey)} (قيمة: ${value}) ← ${points} نقطة`);
 
     // منع إعادة الاختيار بصرياً (لللاعب الحالي) — لكن سنبقي زر ظاهرًا لأنه يُستخدم من لاعبين آخرين
     // سنتحديث الواجهة حسب اللاعب النشط أدناه
@@ -429,4 +440,3 @@
 
 </body>
 </html>
-
